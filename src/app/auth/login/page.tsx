@@ -1,0 +1,162 @@
+'use client';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+import { useState } from 'react';
+import { SuccessAlert, ErrorAlert } from '@/components/Alert';
+import { apiUrl } from '@/app/api/hooks/useAuth';
+
+export default function LoginPage() {
+  const [alertMessage, setAlertMessage] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+
+  const validationSchema = Yup.object({
+    email: Yup.string().email('Invalid email address').required('Required'),
+    password: Yup.string().required('Required'),
+  });
+
+  const formik = useFormik({
+    initialValues: {
+      email: '',
+      password: '',
+    },
+    validationSchema: validationSchema,
+    onSubmit: async (values, { setSubmitting, setErrors }) => {
+      try {
+        const response = await fetch(`${apiUrl}/auth/login`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(values),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          console.log('Login successful:', data);
+          setAlertMessage({ type: 'success', message: 'Login successful!' });
+          setTimeout(() => setAlertMessage(null), 3000); // Clear after 3 seconds
+        } else {
+          console.error('Login failed:', data.message);
+          setErrors({ email: data.message || 'Login failed' });
+          setAlertMessage({ type: 'error', message: data.message || 'Login failed.' });
+          setTimeout(() => setAlertMessage(null), 3000); // Clear after 3 seconds
+        }
+      } catch (error) {
+        console.error('Network error:', error);
+        setErrors({ email: 'Network error' });
+        setAlertMessage({ type: 'error', message: 'Network error. Please try again.' });
+        setTimeout(() => setAlertMessage(null), 3000); // Clear after 3 seconds
+      } finally {
+        setSubmitting(false);
+      }
+    },
+  });
+
+  return (
+    <div className="min-h-screen flex ">
+      <div className="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24 bg-white text-black">
+        <div className="mx-auto w-full max-w-sm lg:w-96">
+          <div>
+            <div className="flex gap-2">  
+               <Image
+              className="h-8 w-auto"
+              src="/guard1.png"
+              alt="Guardian"
+              width={50}
+              height={50}
+            />
+
+            <h2 className="text-2xl font-extrabold text-dark">Guardian </h2>
+            </div>
+           
+            <h2 className="mt-6 text-xl  ">It's nice having you back on Guardian Angel</h2>
+          </div>
+
+          <div className="mt-8">
+            <div className="mt-6">
+              <form onSubmit={formik.handleSubmit} className="space-y-6">
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                    Email
+                  </label>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    placeholder="seunodesuo@gmail.com"
+                    value={formik.values.email}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    className={`w-full px-3 py-4  rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${
+                      formik.touched.email && formik.errors.email ? 'border-red-500' : ''
+                    }`}
+                  />
+                  {formik.touched.email && formik.errors.email && (
+                    <p className="mt-1 text-sm text-red-500">{formik.errors.email}</p>
+                  )}
+                </div>
+                <div>
+                  <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+                    Password
+                  </label>
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    autoComplete="current-password"
+                    placeholder="********"
+                    value={formik.values.password}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    className={`w-full px-3 py-4 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${
+                      formik.touched.password && formik.errors.password ? 'border-red-500' : ''
+                    }`}
+                  />
+                  {formik.touched.password && formik.errors.password && (
+                    <p className="mt-1 text-sm text-red-500">{formik.errors.password}</p>
+                  )}
+                </div>
+                 
+
+                <div>
+                  <button
+                    type="submit"
+                    disabled={formik.isSubmitting}
+                    className=" flex justify-center py-3 px-8 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#002147] hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
+                  >
+                    Login <span className="ml-2">&rarr;</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <div className="mt-6  text-sm text-black ">
+              You don't have an account? click on{' '}
+              <Link href="/auth/register" className="font-bold text-[#002147] hover:text-indigo-500">
+                Create account
+              </Link>
+            </div>
+            {alertMessage && alertMessage.type === 'success' && (
+              <SuccessAlert message={alertMessage.message} onClose={() => setAlertMessage(null)} />
+            )}
+            {alertMessage && alertMessage.type === 'error' && (
+              <ErrorAlert message={alertMessage.message} onClose={() => setAlertMessage(null)} />
+            )}
+          </div>
+        </div>
+      </div>
+      <div className="hidden lg:block relative w-0 flex-1 bg-gradient-to-br from-blue-900 to-indigo-900">
+        <Image
+          className="absolute inset-0 h-full w-full object-cover"
+          src="/heart-hands.svg"
+          alt=""
+          layout="fill"
+        />
+      </div>
+    </div>
+  );
+}
+
