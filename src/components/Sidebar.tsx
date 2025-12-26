@@ -1,4 +1,4 @@
-import React from 'react';
+'use client'
 import { Home, Users, Phone, FileText, MapPin, Bell } from 'lucide-react';
 import Image from 'next/image';
 
