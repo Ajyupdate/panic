@@ -74,10 +74,10 @@ export default function RegisterPage() {
               <ErrorAlert message={alertMessage.message} onClose={() => setAlertMessage(null)} />
             )}
   
-    <div className="min-h-screen flex bg-white text-black">
+    <div className="min-h-screen flex flex-col-reverse lg:flex-row bg-white text-black">
 
-      <div className="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24 bg-white text-black">
-        <div className="mx-auto w-full max-w-sm lg:w-96">
+      <div className="flex-1 flex flex-col justify-center py-12 px-2 sm:px-6 lg:flex-none lg:px-10 xl:px-10 bg-white text-black lg:w-2/5">
+        <div className="px-6">
           <div>
             <div className="flex gap-2">  
                <Image
@@ -194,7 +194,7 @@ export default function RegisterPage() {
                     disabled={formik.isSubmitting}
                     className=" flex justify-center py-3 px-8 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#002147] hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
                   >
-                    Register <span className="ml-2">&rarr;</span>
+                   {formik.isSubmitting ? "Registering" : "Register"} <span className="ml-2">&rarr;</span>
                   </button>
                 </div>
               </form>
@@ -210,12 +210,14 @@ export default function RegisterPage() {
           </div>
         </div>
       </div>
-      <div className="hidden lg:block relative w-0 flex-1 bg-gradient-to-br from-blue-900 to-indigo-900">
+
+
+      <div className="relative w-full h-64 sm:h-80 md:h-96 lg:w-3/5 lg:min-h-screen">
         <Image
-          className="absolute inset-0 h-full w-full object-cover"
-          src="/heart-hands-register.svg"
+          src="/signup-pic.png"
           alt=""
-          layout="fill"
+          fill
+          className="object-cover"
         />
       </div>
     </div>
