@@ -8,6 +8,7 @@ import { SuccessAlert, ErrorAlert } from '@/components/Alert';
 import { apiUrl, useAuth } from '@/app/api/hooks/useAuth';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
 
 
 export default function RegisterPage() {
@@ -42,23 +43,23 @@ export default function RegisterPage() {
         });
 
         const data = await response.json();
-
+      
         if (response.ok) {
          
-          setAlertMessage({ type: 'success', message: 'Registration successful!' });
-          setTimeout(() => setAlertMessage(null), 3000); // Clear after 3 seconds
+          toast.success('Login successful!');
           router.push('/auth/login')
         } else {
-         
+          toast.error(data.data[0].message || data.message || 'Registration failed.' )
           setErrors({ email: data.message || 'Registration failed' });
-          setAlertMessage({ type: 'error', message: data.data[0].message || data.message || 'Registration failed.' });
-          setTimeout(() => setAlertMessage(null), 3000); // Clear after 3 seconds
+          
+          
         }
       } catch (error) {
-       
+       console.log(error)
         setErrors({ email: 'Network error' });
-        setAlertMessage({ type: 'error', message: 'Network error. Please try again.' });
-        setTimeout(() => setAlertMessage(null), 3000); // Clear after 3 seconds
+        toast.error('Network error. Please try again.')
+        
+       
       } finally {
         setSubmitting(false);
       }

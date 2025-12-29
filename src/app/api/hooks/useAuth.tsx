@@ -9,7 +9,7 @@ export const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API;
 const BASE_URL = apiUrl;
 
 export const useAuth = () => {
-  const { token, signOut } = useAuthContext();
+  const { token,  signOut } = useAuthContext();
 
   const client = axios.create({
     baseURL: BASE_URL,

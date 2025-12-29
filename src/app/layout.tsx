@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Poppins, Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import 'react-toastify/dist/ReactToastify.css';
 import { AuthProvider } from "@/AuthContext";
 import TanstackProvider from "@/../providers/TanstackProvider";
+import { ToastContainer } from 'react-toastify';
 
 
 const poppins = Poppins({
@@ -41,6 +43,7 @@ export default function RootLayout({
              {children}
            </TanstackProvider>
         </AuthProvider>
+        <ToastContainer />
        
       </body>
     </html>
