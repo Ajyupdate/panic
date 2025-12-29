@@ -8,6 +8,7 @@ export interface User {
   _id: string;
   firstName: string;
   lastName: string;
+  fullName: string;
   email: string;
   phone: string | null;
   organizationId: string;
@@ -17,8 +18,9 @@ export interface User {
 
 export interface AuthContextType {
   token: string | null;
+  refreshToken: string | null;
   user: User | null;
-  signIn: (newToken: string, userData: User) => void;
+  signIn: (newToken: string, refreshToken:string, userData: User) => void;
   signOut: () => void;
 }
 
@@ -28,17 +30,22 @@ export const AuthContext = createContext<AuthContextType | undefined>(
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [token, setToken] = useState<string | null>(null);
+  const [refreshToken, setRefreshToken] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
 
   const router = useRouter();
 
-  const signIn = (newToken: string, userData: User) => {
+  const signIn = (newToken: string, newRefreshToken:string, userData: User) => {
     setToken(newToken);
+    setRefreshToken(newRefreshToken)
     setUser(userData);
 
     try {
       localStorage.setItem("token", String(newToken));
+      localStorage.setItem('refreshToken', String(newRefreshToken))
       localStorage.setItem("user", JSON.stringify(userData));
+
+
     } catch (err) {
       // localStorage could be disabled in some environments — fail silently.
       console.error("Failed to persist auth to localStorage", err);
@@ -47,10 +54,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const signOut = () => {
     setToken(null);
+    setRefreshToken(null)
     setUser(null);
 
     try {
       localStorage.removeItem("token");
+      localStorage.removeItem('refreshToken')
       localStorage.removeItem("user");
     } catch (err) {
       console.error("Failed to remove auth from localStorage", err);
@@ -63,11 +72,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   React.useEffect(() => {
     try {
       const storedToken = localStorage.getItem("token");
+      const storedRefreshToken = localStorage.getItem('refreshToken')
       const storedUser = localStorage.getItem("user");
 
       // Guard against the string "undefined" or "null"
       if (storedToken && storedToken !== "undefined" && storedToken !== "null") {
         setToken(storedToken);
+
+      }
+
+      if (storedRefreshToken && storedRefreshToken !== "undefined" && storedRefreshToken !== "null") {
+        setRefreshToken(storedRefreshToken);
       }
 
       if (storedUser && storedUser !== "undefined" && storedUser !== "null") {
@@ -87,7 +102,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ token, user, signIn, signOut }}>
+    <AuthContext.Provider value={{ token, refreshToken, user, signIn, signOut }}>
       {children}
     </AuthContext.Provider>
   );

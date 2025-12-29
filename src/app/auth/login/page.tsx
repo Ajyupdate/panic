@@ -4,12 +4,14 @@ import Link from 'next/link';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useState } from 'react';
-import { SuccessAlert, ErrorAlert } from '@/components/Alert';
+import { toast } from 'react-toastify';
 import { apiUrl } from '@/app/api/hooks/useAuth';
+import { useRouter } from 'next/navigation';
+import { useAuthContext } from '@/AuthContext';
 
 export default function LoginPage() {
-  const [alertMessage, setAlertMessage] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
-
+  const router = useRouter()
+  const {signIn} = useAuthContext()
   const validationSchema = Yup.object({
     email: Yup.string().email('Invalid email address').required('Required'),
     password: Yup.string().required('Required'),
@@ -34,20 +36,21 @@ export default function LoginPage() {
         const data = await response.json();
 
         if (response.ok) {
-          console.log('Login successful:', data);
-          setAlertMessage({ type: 'success', message: 'Login successful!' });
-          setTimeout(() => setAlertMessage(null), 3000); // Clear after 3 seconds
+         console.log(data)
+         signIn(data.data.tokens.accessToken, data.data.tokens.refreshToken, data.data.user)
+          toast.success('Login successful!');
+          router.push('/')
         } else {
-          console.error('Login failed:', data.message);
+          
           setErrors({ email: data.message || 'Login failed' });
-          setAlertMessage({ type: 'error', message: data.message || 'Login failed.' });
-          setTimeout(() => setAlertMessage(null), 3000); // Clear after 3 seconds
+          toast.error(data.message || 'Login failed.');
+         
+          
         }
       } catch (error) {
-        console.error('Network error:', error);
+        
         setErrors({ email: 'Network error' });
-        setAlertMessage({ type: 'error', message: 'Network error. Please try again.' });
-        setTimeout(() => setAlertMessage(null), 3000); // Clear after 3 seconds
+        toast.error('Network error. Please try again.');
       } finally {
         setSubmitting(false);
       }
@@ -139,12 +142,6 @@ export default function LoginPage() {
                 Create account
               </Link>
             </div>
-            {alertMessage && alertMessage.type === 'success' && (
-              <SuccessAlert message={alertMessage.message} onClose={() => setAlertMessage(null)} />
-            )}
-            {alertMessage && alertMessage.type === 'error' && (
-              <ErrorAlert message={alertMessage.message} onClose={() => setAlertMessage(null)} />
-            )}
           </div>
         </div>
       </div>
