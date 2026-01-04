@@ -17,10 +17,7 @@ const validationSchema = Yup.object({
   address: Yup.string()
     .required('Address is required')
     .min(5, 'Address must be at least 5 characters'),
-  radius: Yup.number()
-    .required('Radius is required')
-    .min(50, 'Radius must be at least 50 meters')
-    .max(5000, 'Radius must be at most 5000 meters'),
+  
   isHome: Yup.boolean(),
   notes: Yup.string()
     .max(200, 'Notes must be at most 200 characters'),
@@ -35,7 +32,7 @@ const AddTrustedLocationPage = () => {
     mutationFn: async (data: {
       name: string;
       address: string;
-      radius: number;
+   
       isHome: boolean;
       notes?: string;
     }) => {
@@ -56,7 +53,7 @@ const AddTrustedLocationPage = () => {
     initialValues: {
       name: '',
       address: '',
-      radius: 150,
+     
       isHome: false,
       notes: '',
     },
@@ -203,32 +200,7 @@ const AddTrustedLocationPage = () => {
                     )}
                 </div>
 
-                {/* Radius Field */}
-                <div className="mb-4">
-                    <label htmlFor="radius" className="block text-sm font-medium text-gray-700 mb-2">
-                    Radius (meters) <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                    id="radius"
-                    name="radius"
-                    type="number"
-                    placeholder="150"
-                    value={formik.values.radius}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none ${
-                        formik.touched.radius && formik.errors.radius
-                        ? 'border-red-500'
-                        : 'border-gray-300'
-                    }`}
-                    />
-                    <p className="mt-1 text-xs text-gray-500">
-                    Current radius: {formik.values.radius}m (Min: 50m, Max: 5000m)
-                    </p>
-                    {formik.touched.radius && formik.errors.radius && (
-                    <p className="mt-1 text-sm text-red-600">{formik.errors.radius}</p>
-                    )}
-                </div>
+                
 
                 {/* Notes Field */}
                 <div className="mb-6">
