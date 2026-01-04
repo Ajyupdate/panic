@@ -25,7 +25,7 @@ const Sidebar = () => {
     { name: 'Emergency Contacts', href: '/emergency-contacts', icon: Phone },
     { name: 'Incident Logs', href: '/incident-logs', icon: FileText },
     { name: 'Trusted Locations', href: '/trusted-locations', icon: MapPin },
-    { name: 'Profile', href: '/profile', icon: Users },
+   
   ];
 
   const getUserLocation = () => {
@@ -107,40 +107,42 @@ const Sidebar = () => {
             );
           })}
         </ul>
+
+        {/* Panic Alert */}
+        <div className="mt-6">
+          <button
+            onClick={() => {
+              if (confirm('Are you sure you want to trigger the panic alert?')) {
+                triggerPanicAlert();
+              }
+            }}
+            disabled={isPanicLoading}
+            className="w-full flex flex-col items-center justify-center py-4 px-4 bg-gray-100 rounded-2xl hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <div className="w-20 h-20 rounded-full bg-red-500 flex items-center justify-center mb-3 shadow-lg" />
+            <span className="font-semibold text-gray-900">
+              {isPanicLoading ? 'Sending Alert...' : 'Panic Alert'}
+            </span>
+          </button>
+
+            {/* User Profile */}
+          <div className="mt-2 pt-4 bg-gray-100 rounded-xl">
+            <Link
+              href="/profile"
+              className="flex items-center gap-6 pb-2 px-2 hover:bg-gray-50 rounded-lg transition-colors"
+            >
+              <div className="w-8 h-8 rounded-full bg-gray-300 overflow-hidden">
+                <div className="w-full h-full bg-gradient-to-br from-blue-400 to-blue-600" />
+              </div>
+              <span className="font-medium text-gray-900">
+                {user?.fullName || 'Username not available'}
+              </span>
+            </Link>
+          </div>
+        </div>
       </nav>
 
-      {/* Panic Alert */}
-      <div className="my-8">
-        <button
-          onClick={() => {
-            if (confirm('Are you sure you want to trigger the panic alert?')) {
-              triggerPanicAlert();
-            }
-          }}
-          disabled={isPanicLoading}
-          className="w-full flex flex-col items-center justify-center py-6 px-4 bg-gray-100 rounded-2xl hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          <div className="w-20 h-20 rounded-full bg-red-500 flex items-center justify-center mb-3 shadow-lg" />
-          <span className="font-semibold text-gray-900">
-            {isPanicLoading ? 'Sending Alert...' : 'Panic Alert'}
-          </span>
-        </button>
-      </div>
-
-      {/* User Profile */}
-      <div className="pt-4 bg-gray-100 rounded-xl">
-        <Link
-          href="/profile"
-          className="flex items-center gap-6 pb-2 px-2 hover:bg-gray-50 rounded-lg transition-colors"
-        >
-          <div className="w-8 h-8 rounded-full bg-gray-300 overflow-hidden">
-            <div className="w-full h-full bg-gradient-to-br from-blue-400 to-blue-600" />
-          </div>
-          <span className="font-medium text-gray-900">
-            {user?.fullName || 'Username not available'}
-          </span>
-        </Link>
-      </div>
+  
     </aside>
   );
 };

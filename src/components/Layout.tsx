@@ -11,12 +11,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div className="flex min-h-screen bg-white text-black">
       {/* Sidebar - approximately 20% */}
-      <div className="shadow-md w-[25%] min-w-[240px] pt-[2.5%]">
+      <div className="shadow-md w-[20%] min-w-[240px] pt-[2.5%]">
         <Sidebar />
       </div>
 
       {/* Main content - approximately 45% */}
-      <main className="w-[40%] flex flex-col border-r border-gray-200 pt-[2.5%] ">
+      <main className="w-[45%] flex flex-col border-r border-gray-200 pt-[2.5%] ">
         <div className="flex-1 ">
           {children}
         </div>

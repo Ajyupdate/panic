@@ -119,12 +119,7 @@ const TrustedLocationsPage = () => {
                     <p className="text-sm text-gray-600">
                       Coordinates: {location.coordinates.coordinates[1].toFixed(6)}, {location.coordinates.coordinates[0].toFixed(6)}
                     </p>
-                    <p className="text-xs text-gray-500 mt-1">
-                      Radius: {location.radius}m
-                      {location.distanceFromCurrent && (
-                        <span> • {location.distanceFromCurrent.toFixed(2)}km away</span>
-                      )}
-                    </p>
+                    
                   </div>
                 </div>
               ))}
