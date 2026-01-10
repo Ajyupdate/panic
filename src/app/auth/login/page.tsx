@@ -15,12 +15,14 @@ export default function LoginPage() {
   const validationSchema = Yup.object({
     email: Yup.string().email('Invalid email address').required('Required'),
     password: Yup.string().required('Required'),
+    loginAs: Yup.string().required('Please select login type'),
   });
 
   const formik = useFormik({
     initialValues: {
       email: '',
       password: '',
+      loginAs: '',
     },
     validationSchema: validationSchema,
     onSubmit: async (values, { setSubmitting, setErrors }) => {
@@ -30,7 +32,10 @@ export default function LoginPage() {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(values),
+          body: JSON.stringify({
+            email: values.email,
+            password: values.password,
+          }),
         });
 
         const data = await response.json();
@@ -39,7 +44,13 @@ export default function LoginPage() {
          console.log(data)
          signIn(data.data.tokens.accessToken, data.data.tokens.refreshToken, data.data.user)
           toast.success('Login successful!');
-          router.push('/')
+          
+          // Redirect based on login type
+          if (values.loginAs === 'respondent') {
+            router.push('/respondents/dashboard')
+          } else {
+            router.push('/')
+          }
         } else {
           
           setErrors({ email: data.message || 'Login failed' });
@@ -80,6 +91,29 @@ export default function LoginPage() {
           <div className="mt-8">
             <div className="mt-6">
               <form onSubmit={formik.handleSubmit} className="space-y-6">
+                <div>
+                  <label htmlFor="loginAs" className="block text-sm font-medium text-gray-700 mb-1">
+                    Login as
+                  </label>
+                  <select
+                    id="loginAs"
+                    name="loginAs"
+                    value={formik.values.loginAs}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    className={`w-full px-3 py-4 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${
+                      formik.touched.loginAs && formik.errors.loginAs ? 'border-red-500' : ''
+                    }`}
+                  >
+                    <option value="">Select login type</option>
+                    <option value="patient">Patient</option>
+                    <option value="respondent">Respondent</option>
+                  </select>
+                  {formik.touched.loginAs && formik.errors.loginAs && (
+                    <p className="mt-1 text-sm text-red-500">{formik.errors.loginAs}</p>
+                  )}
+                </div>
+
                 <div>
                   <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
                     Email
@@ -156,4 +190,3 @@ export default function LoginPage() {
     </div>
   );
 }
-
