@@ -6,10 +6,12 @@ import { ArrowLeftIcon, UserPen, Settings, X } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '../api/hooks/useAuth';
 import { toast } from 'react-toastify';
+import { useRouter } from 'next/navigation';
 
 
 const ProfilePage: React.FC = () => {
   const {client} = useAuth()
+  const router = useRouter();
   const queryClient = useQueryClient();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [formData, setFormData] = useState({
@@ -228,6 +230,9 @@ const ProfilePage: React.FC = () => {
             </button>
             <button className="bg-gray-100 text-black px-4 py-2 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 flex items-center gap-2">
               <Settings size={20} /> Settings
+            </button>
+            <button onClick={() => router.push('/respondents/register')} className="bg-green-500 text-black px-4 py-2 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 flex items-center gap-2">
+              Sign up as a respondent
             </button>
           </div>
 
