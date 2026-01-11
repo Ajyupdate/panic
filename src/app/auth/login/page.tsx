@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 import { apiUrl } from '@/app/api/hooks/useAuth';
 import { useRouter } from 'next/navigation';
 import { useAuthContext } from '@/AuthContext';
+import { log } from 'console';
 
 export default function LoginPage() {
   const router = useRouter()
@@ -15,14 +16,14 @@ export default function LoginPage() {
   const validationSchema = Yup.object({
     email: Yup.string().email('Invalid email address').required('Required'),
     password: Yup.string().required('Required'),
-    loginAs: Yup.string().required('Please select login type'),
+    loginType: Yup.string().required('Please select login type'),
   });
 
   const formik = useFormik({
     initialValues: {
       email: '',
       password: '',
-      loginAs: '',
+      loginType: '',
     },
     validationSchema: validationSchema,
     onSubmit: async (values, { setSubmitting, setErrors }) => {
@@ -35,18 +36,19 @@ export default function LoginPage() {
           body: JSON.stringify({
             email: values.email,
             password: values.password,
+            loginType: values.loginType,
           }),
         });
 
         const data = await response.json();
 
         if (response.ok) {
-         console.log(data)
+       
          signIn(data.data.tokens.accessToken, data.data.tokens.refreshToken, data.data.user)
           toast.success('Login successful!');
           
           // Redirect based on login type
-          if (values.loginAs === 'respondent') {
+          if (values.loginType === 'respondent') {
             router.push('/respondents/dashboard')
           } else {
             router.push('/')
@@ -59,7 +61,7 @@ export default function LoginPage() {
           
         }
       } catch (error) {
-        
+        console.error('Error during login:', error);
         setErrors({ email: 'Network error' });
         toast.error('Network error. Please try again.');
       } finally {
@@ -92,25 +94,25 @@ export default function LoginPage() {
             <div className="mt-6">
               <form onSubmit={formik.handleSubmit} className="space-y-6">
                 <div>
-                  <label htmlFor="loginAs" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="loginType" className="block text-sm font-medium text-gray-700 mb-1">
                     Login as
                   </label>
                   <select
-                    id="loginAs"
-                    name="loginAs"
-                    value={formik.values.loginAs}
+                    id="loginType"
+                    name="loginType"
+                    value={formik.values.loginType}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     className={`w-full px-3 py-4 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${
-                      formik.touched.loginAs && formik.errors.loginAs ? 'border-red-500' : ''
+                      formik.touched.loginType && formik.errors.loginType ? 'border-red-500' : ''
                     }`}
                   >
                     <option value="">Select login type</option>
-                    <option value="patient">Patient</option>
+                    <option value="user">Patient</option>
                     <option value="respondent">Respondent</option>
                   </select>
-                  {formik.touched.loginAs && formik.errors.loginAs && (
-                    <p className="mt-1 text-sm text-red-500">{formik.errors.loginAs}</p>
+                  {formik.touched.loginType && formik.errors.loginType && (
+                    <p className="mt-1 text-sm text-red-500">{formik.errors.loginType}</p>
                   )}
                 </div>
 

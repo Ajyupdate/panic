@@ -94,13 +94,13 @@ const RespondentDashboardPage = () => {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'active':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-300';
+        return 'bg-yellow-100 text-[#FF0000] border-yellow-300';
       case 'acknowledged':
-        return 'bg-blue-100 text-blue-800 border-blue-300';
+        return 'bg-blue-100 text-[#EEC408] border-blue-300';
       case 'resolved':
-        return 'bg-green-100 text-green-800 border-green-300';
+        return 'bg-green-100 text-[#47D63A] border-green-300';
       case 'cancelled':
-        return 'bg-red-100 text-red-800 border-red-300';
+        return 'bg-red-100 text-[#3A3A3A] border-red-300';
       default:
         return 'bg-gray-100 text-gray-800 border-gray-300';
     }
