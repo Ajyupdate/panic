@@ -77,7 +77,8 @@ const RespondentRegisterPage = () => {
       router.push('/respondents/dashboard');
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.message || 'Registration failed');
+      console.log(error)
+      toast.error(error.response?.data?.error || error.response?.data?.message || 'Registration failed');
     },
   });
 
