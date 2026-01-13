@@ -221,17 +221,17 @@ const ProfilePage: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex space-x-4 mb-6">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-6">
             <button 
               onClick={openEditModal}
-              className="bg-gray-100 text-black px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 flex items-center gap-2"
+              className="bg-gray-100 text-black px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 flex items-center justify-center gap-2 w-full sm:w-auto"
             >
               <UserPen size={20} /> Edit Profile
             </button>
-            <button className="bg-gray-100 text-black px-4 py-2 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 flex items-center gap-2">
+            <button className="bg-gray-100 text-black px-4 py-2 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 flex items-center justify-center gap-2 w-full sm:w-auto">
               <Settings size={20} /> Settings
             </button>
-            <button onClick={() => router.push('/respondents/register')} className="bg-green-500 text-black px-4 py-2 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 flex items-center gap-2">
+            <button onClick={() => router.push('/respondents/register')} className="bg-green-500 text-black px-4 py-2 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 flex items-center justify-center gap-2 w-full sm:w-auto">
               Sign up as a respondent
             </button>
           </div>
