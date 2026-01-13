@@ -51,11 +51,11 @@ const RespondentRegisterPage = () => {
     queryKey: ['hospitals'],
     queryFn: async () => {
       const { data } = await client.get('/hospitals');
-      return data;
+      return data.data;
     },
   });
 
-  const hospitals = [{_id: '6957de6aa160fdace7e54d96', name: 'Default Hospital'}];
+  const hospitals = hospitalsData || [];
 
   // Create default availability (all false)
   const createDefaultAvailability = () => {
