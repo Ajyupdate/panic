@@ -51,11 +51,11 @@ const RespondentRegisterPage = () => {
     queryKey: ['hospitals'],
     queryFn: async () => {
       const { data } = await client.get('/hospitals');
-      return data;
+      return data.data;
     },
   });
 
-  const hospitals = [{_id: '6957de6aa160fdace7e54d96', name: 'Default Hospital'}];
+  const hospitals = hospitalsData || [];
 
   // Create default availability (all false)
   const createDefaultAvailability = () => {
@@ -77,7 +77,8 @@ const RespondentRegisterPage = () => {
       router.push('/respondents/dashboard');
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.message || 'Registration failed');
+      console.log(error)
+      toast.error(error.response?.data?.error || error.response?.data?.message || 'Registration failed');
     },
   });
 
